@@ -10,8 +10,8 @@ public:
     int get_count() const;
 private:
     //设置成mutable是为了和可能的const连用
-    mutable pthread_mutex_t mutex_;
-    pthread_cond_t cond_;
+    mutable Mutex mutex_;
+    Cond cond_;
     int count_;
 };
 #endif
