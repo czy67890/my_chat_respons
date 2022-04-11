@@ -48,8 +48,8 @@ public:
             throw std::exception();
         }
     }
-    void lock(MutexGroud &mutex_){
-        pthread_cond_wait(&cond_,mutex_.get_mutex().get_lock());
+    void wait(Mutex &mutex_){
+        pthread_cond_wait(&cond_ , mutex_.get_lock());
     }
     void post(){
         pthread_cond_signal(&cond_);

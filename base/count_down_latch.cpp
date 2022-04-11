@@ -5,7 +5,7 @@ void CountDownLatch::wait(){
     //先锁住,用守卫RAII来实现防止忘记解锁
     MutexGroud lock(mutex_);
     while(count_ > 0){
-       cond_.wait(lock);
+       cond_.wait(mutex_);
     } 
 }
 void CountDownLatch::count_down(){
