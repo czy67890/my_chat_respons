@@ -1,6 +1,7 @@
 #ifndef COUNT_DOWN_H_
 #define COUNT_DOWN_H_
 #include "platform.h"
+#include"locker.h"
 class CountDownLatch{
 public:
     explicit CountDownLatch(int count);
