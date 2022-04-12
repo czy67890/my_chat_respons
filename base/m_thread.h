@@ -2,6 +2,7 @@
 #include"platform.h"
 #include<functional>
 #include"count_down_latch.h"
+#include"atomic.h"
 //自己的线程类
 class MThread{
 public:
@@ -23,5 +24,5 @@ private:
     ThreadFunc m_func;
     std::string m_name;
     CountDownLatch m_latch;
-
+    static AtomicInt32 num_created_;
 };
