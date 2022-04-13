@@ -2,9 +2,13 @@
 #include"platform.h"
 #include<functional>
 #include"count_down_latch.h"
+#include"nocopyable.h"
+#include<assert.h>
 #include"atomic.h"
+#include"time_stamp.h"
 //自己的线程类
-class MThread{
+namespace czy{
+class MThread : nocopyable{
 public:
     //线程需要运行的函数
     typedef std::function<void()> ThreadFunc;
@@ -12,17 +16,21 @@ public:
     explicit MThread(ThreadFunc,const std::string &name = std::string());
     ~MThread();
     void start();
-    void jion();
-    pid_t get_pid();
-    
+    bool started(){return m_started;}
+    int jion();
+    pid_t tid() const {return m_tid;};
+    static int num_created(){return m_num_created.get();}
     //声明为const的防止意外修改
     bool started() const {return m_started;}
 private:
+    void set_default_name();
     bool m_started;
+    bool m_joined;
     pid_t m_tid;
     pthread_t m_pthread_id;
     ThreadFunc m_func;
     std::string m_name;
     CountDownLatch m_latch;
-    static AtomicInt32 num_created_;
+    static czy::AtomicInt32 m_num_created;
 };
+}
