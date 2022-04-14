@@ -72,8 +72,9 @@ bool CurrentThread::is_main_thread(){
 }
 void CurrentThread::sleep_usec(int64_t usec){
     struct timespec ts = {0,0};
-    ts.tv_sec = static_cast<time_t>(usec/TimeStamp::kMicroSecondsPerSecond);
-    ts.tv_nsec = static_cast<long>(usec% TimeStamp::kMicroSecondsPerSecond * 1000);
+    ts.tv_sec = static_cast<time_t>(usec/TimeStamp::k_micro_seconds_persecond);
+    ts.tv_nsec = static_cast<long>(usec% TimeStamp::k_micro_seconds_persecond * 1000);
+    ::nanosleep(&ts,NULL);
 }
 AtomicInt32 m_thread_creted;
 //使用move防止拷贝的发生
