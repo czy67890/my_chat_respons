@@ -68,5 +68,23 @@ STRINGPIECE_BINARY_PREDICATE(<=, <);
 STRINGPIECE_BINARY_PREDICATE(>=, >);
 STRINGPIECE_BINARY_PREDICATE(>,  >);
 #undef STRINGPIECE_BINARY_PREDICATE
+    int compare(const StringPiece &x) const{
+        int r = memcmp(m_ptr,x.m_ptr,m_length<x.m_length ?m_length : x.m_length);
+        if(r == 0){
+            if(m_length < x.m_length) r == -1;
+            else if(m_length > x.m_length) r = +1;
+        }
+        return r;
+    }
+    string as_string() const{
+        return string(data(),size());
+    }
+    void copy_to_string(string * target) const{
+        target->assign(m_ptr,m_length);
+    }
+    bool starts_with(const StringPiece & x) const{
+        return ((m_length >= x.m_length) &&(memcmp(m_ptr,x.m_ptr,x.m_length) == 0));
+    }
 };
+std::ostream & operator<<(std::ostream & o,const czy::StringPiece & piece);
 }
