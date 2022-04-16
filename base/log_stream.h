@@ -32,17 +32,12 @@ public:
         m_cookie = cookie;
     }
     const char *data() const{ return m_data;}
-    int length const()
-    {
-        return static_cast<int> (m_cur - m_data);
-    }
-    int avail() const{ return static_cast<int> (end() - m_cur);}
+    int length() const{ return static_cast<int>(m_cur - m_data); }
+    int avail() const{ return static_cast<int>(end() - m_cur);}
     void add(size_t len){
         m_cur += len;
     }
-    void reset(){
-        m_cur = m_data;
-    }
+    void reset(){ m_cur = m_data; }
     void bzero(){
         mem_zero(m_data,sizeof(m_data));
     }

@@ -243,7 +243,7 @@ Fmt::Fmt(const char * fmt,T val){
   m_length = snprintf(m_buf,sizeof(m_buf),m_fmt,val);
   assert(static_cast<size_t>(m_length) < sizeof(m_buf));
 }
-//将上面的模板类特列化
+//模板显示实列化，方便后续用非模板的方法直接调用Fmt类
 template Fmt::Fmt(const char * fmt,char);
 template Fmt::Fmt(const char * fmt,short);
 template Fmt::Fmt(const char * fmt,unsigned short);
