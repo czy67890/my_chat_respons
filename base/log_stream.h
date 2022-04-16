@@ -12,9 +12,6 @@ const int k_large_buffer = 4000*1000;
 template<int SIZE>
 class FixBuffer : nocopyable{
 public:
-    void set_cookie(void (* cookie)() ){
-        m_cookie = cookie;
-    }
     FixBuffer()
      :m_cur(m_data){
          set_cookie(cookie_start);
@@ -22,15 +19,21 @@ public:
     ~FixBuffer(){
         set_cookie(cookie_end);
     }
+    char *current(){ return m_cur; }
     void append(const char * buf,size_t len){
         //implicit_cast 实现安全的上转型
-        if(implicit_cast<size_t>(avail()) > len){
+        if(implicit_cast<size_t>(avail()) > len)
+        {
             memcpy(m_cur,buf,len);
             m_cur += len;
         }
     }
+    void set_cookie(void (* cookie)() ){
+        m_cookie = cookie;
+    }
     const char *data() const{ return m_data;}
-    int length const(){
+    int length const()
+    {
         return static_cast<int> (m_cur - m_data);
     }
     int avail() const{ return static_cast<int> (end() - m_cur);}
@@ -61,7 +64,7 @@ private:
 }//namespace detail
 class LogStream: nocopyable{
 typedef LogStream self;
-typedef detail::FixBuffer<detail::k_small_buffer> Buffer;
+typedef czy::detail::FixBuffer<detail::k_small_buffer> Buffer;
 public: 
     //流使用对自己的引用
     self & operator<<( bool v){
@@ -132,7 +135,7 @@ public:
   }
   void append(const char * data,int len){ m_buffer.append(data,len);}
   const Buffer &buffer() const {return m_buffer;}
-  void reset_buffer(){m_buffer.reset();}
+  void reset_buffer(){ m_buffer.reset() ;}
 private:
     void static_check();
     template<typename T>
@@ -140,4 +143,20 @@ private:
     Buffer m_buffer;
     static const int k_max_num_size = 48;
 };
+class Fmt{
+public:
+    template<typename T>
+    Fmt(const char * fmt, T val);
+    const char * data(){return m_buf;}
+    int length() const {return m_length;}
+private:
+    char m_buf[32];
+    int m_length;
+};
+inline LogStream & operator<<(LogStream & s,Fmt & fmt){
+    s.append(fmt.data(),fmt.length());
+    return s;
+}
+string formatSI(int64_t n);
+string formatIEC(int64_t n);
 }
