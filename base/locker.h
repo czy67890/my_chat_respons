@@ -1,6 +1,7 @@
 #pragma once
 #include "platform.h"
 #include "raii_wrape.h"
+namespace czy{
 class Mutex{
 public:
     Mutex(){
@@ -60,3 +61,4 @@ public:
 private:
     pthread_cond_t cond_;
 };
+}

@@ -2,6 +2,7 @@
 #define COUNT_DOWN_H_
 #include "platform.h"
 #include"locker.h"
+namespace czy{
 class CountDownLatch{
 public:
     explicit CountDownLatch(int count);
@@ -14,4 +15,5 @@ private:
     Cond cond_;
     int count_;
 };
+}
 #endif
