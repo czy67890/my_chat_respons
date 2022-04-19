@@ -16,7 +16,7 @@ class ReadSmallFile : nocopyable
 
   // return errno
   template<typename String>
-  int readToString(int maxSize,
+  int read_to_string(int maxSize,
                    String* content,
                    int64_t* fileSize,
                    int64_t* modifyTime,
@@ -24,21 +24,21 @@ class ReadSmallFile : nocopyable
 
   /// Read at maxium kBufferSize into buf_
   // return errno
-  int readToBuffer(int* size);
+  int read_to_buffer(int* size);
 
-  const char* buffer() const { return buf_; }
+  const char* buffer() const { return m_buf; }
 
-  static const int kBufferSize = 64*1024;
+  static const int k_buff_size = 64*1024;
 
  private:
-  int fd_;
-  int err_;
-  char buf_[kBufferSize];
+  int m_fd;
+  int m_err;
+  char m_buf[k_buff_size];
 };
 
 // read the file content, returns errno if error happens.
 template<typename String>
-int readFile(StringArg filename,
+int read_file(StringArg filename,
              int maxSize,
              String* content,
              int64_t* fileSize = NULL,
@@ -46,7 +46,7 @@ int readFile(StringArg filename,
              int64_t* createTime = NULL)
 {
   ReadSmallFile file(filename);
-  return file.readToString(maxSize, content, fileSize, modifyTime, createTime);
+  return file.read_to_string(maxSize, content, fileSize, modifyTime, createTime);
 }
 
 // not thread safe
@@ -61,15 +61,15 @@ class AppendFile : nocopyable
 
   void flush();
 
-  off_t writtenBytes() const { return writtenBytes_; }
+  off_t written_bytes() const { return m_write_bytes; }
 
  private:
 
   size_t write(const char* logline, size_t len);
 
-  FILE* fp_;
-  char buffer_[64*1024];
-  off_t writtenBytes_;
+  FILE* m_fp;
+  char m_buffer[64*1024];
+  off_t m_write_bytes;
 };
 
 }  // namespace FileUtil
