@@ -37,12 +37,13 @@ class LogFile : nocopyable
 
   int m_count;
 
-  std::unique_ptr<Mutex> mutex_;
+  std::unique_ptr<Mutex> m_mutex;
   time_t m_start_of_period;
   time_t m_last_roll;
   time_t m_last_flush;
+  //unique_ptr用于独占的享有Mutex，没有拷贝构造和拷贝赋值的操作
+  //只能通过move将一个右值转换成左值来进行转移
   std::unique_ptr<FileUtil::AppendFile> m_file;
-
   const static int k_roll_per_seconds = 60*60*24;
 };
 
