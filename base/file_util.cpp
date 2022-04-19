@@ -56,9 +56,9 @@ size_t FileUtil::AppendFile::write(const char* logline, size_t len)
   return ::fwrite_unlocked(logline, 1, len, m_fp);
 }
 
-FileUtil::ReadSmallFile::ReadSmallFile (StringArg filename)
+czy::FileUtil::ReadSmallFile::ReadSmallFile (czy::StringArg filename)
   :m_fd(::open(filename.c_str(), O_RDONLY | O_CLOEXEC)),
-    err_(0)
+    m_err(0)
 {
   m_buf[0] = '\0';
   if (m_fd < 0)

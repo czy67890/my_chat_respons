@@ -19,8 +19,7 @@ pid_t pid();
 
   string hostname();
   string procname();
-  StringPiece procname(const string& stat);
-
+  czy::StringPiece procname(const string& stat);
   /// read /proc/self/status
   string proc_status();
 

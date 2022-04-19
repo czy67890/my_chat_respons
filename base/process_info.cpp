@@ -129,11 +129,6 @@ string ProcessInfo::hostname()
   }
 }
 
-string ProcessInfo::procname()
-{
-  return procname(proc_stat()).as_string();
-}
-
 czy::StringPiece ProcessInfo::procname(const string& stat)
 {
   czy::StringPiece name;
@@ -145,7 +140,10 @@ czy::StringPiece ProcessInfo::procname(const string& stat)
   }
   return name;
 }
-
+string ProcessInfo::procname()
+{
+  return procname(proc_stat()).as_string();
+}
 string ProcessInfo::proc_status()
 {
   string result;
