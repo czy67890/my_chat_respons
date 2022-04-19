@@ -73,4 +73,4 @@ class AppendFile : nocopyable
 };
 
 }  // namespace FileUtil
-}  // namespace czy
+}   // namespace czy

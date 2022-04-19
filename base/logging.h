@@ -62,6 +62,7 @@ private:
         TimeStamp m_time;
         LogStream m_stream;
         int m_line;
+        LogLevel m_level;
         SourceFile m_base_name;  
     };
     Impl m_impl;

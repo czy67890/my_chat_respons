@@ -58,6 +58,7 @@ private:
 };
 }//namespace detail
 class LogStream: nocopyable{
+public:
 typedef LogStream self;
 typedef czy::detail::FixBuffer<detail::k_small_buffer> Buffer;
 public: 

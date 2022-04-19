@@ -6,7 +6,7 @@
 #define __STDC_FORMAT_MACROS
 #endif
 using namespace czy;
-static_assert(sizeof(TimeStamp) == sizeof(int64_t),"Time has to be int64_t");
+//static_assert(sizeof(TimeStamp) == sizeof(int64_t),"Time has to be int64_t");
 std::string TimeStamp::to_string() const{
     char buf[32] = {0};
     int64_t seconds = m_micro_since_epoch/k_micro_seconds_persecond;

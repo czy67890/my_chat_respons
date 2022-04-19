@@ -29,7 +29,7 @@ class Date{
     std::string to_iso_string() const;
     struct YearMonthDay yearMonthDay() const;
     int year() const{
-        return yearMonthDay().year();
+        return yearMonthDay().year;
     }
     int month() const{
         return yearMonthDay().month;
