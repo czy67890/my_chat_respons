@@ -39,7 +39,7 @@ private:
     //c++中的原子类型atomic能够保证多线程访问
     std::atomic<bool> m_running;
     const string m_basename;
-    const off_t roll_size;
+    const off_t m_roll_size;
     czy::MThread m_thread;
     czy::CountDownLatch m_latch;
     czy::Mutex     m_mutex;

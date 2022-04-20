@@ -58,6 +58,19 @@ public:
     void notify_all(){
         pthread_cond_broadcast(&cond_);
     }
+    bool wait_for_seconds(double seconds){
+        //timespec????????????
+        //?linux???????
+        struct timespec abstime;
+        //CLOCK_REALTIME??????????????
+        clock_gettime(CLOCK_REALTIME,&abstime);
+        const int64_t k_nanosecond_per_second = 1000000000;
+        int64_t nano_second = static_cast<int64_t>(seconds * k_nanosecond_per_second);
+        
+        abstime.tv_sec += static_cast<time_t>(abstime.tv_nsec + nano_second)/k_nanosecond_per_second;
+        abstime.tv_nsec = static_cast<long>((abstime.tv_nsec + nano_second))%k_nanosecond_per_second;
+
+    }
 private:
     pthread_cond_t cond_;
 };

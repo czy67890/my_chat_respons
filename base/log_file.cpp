@@ -52,7 +52,50 @@ void czy::LogFile::append_unlocked(const char * logline,int len){
         if(m_count >= m_check_every_n){
             m_count = 0;
             time_t now = time(NULL);
-            
+            //先除上一天的秒数，再乘回去，旨在对齐到当天零点
+            time_t m_this_peroid = now/k_roll_per_seconds*k_roll_per_seconds;
+            if(m_this_peroid != m_start_of_period){
+                roll_file();
+            }
+            else if(now - m_last_flush > m_flush_interval){
+                m_last_flush = now;
+                m_file->flush();
+            }
         }
     }
+}
+bool czy::LogFile::roll_file(){
+    time_t now = 0;
+    string file_name = get_log_filename(m_basename,&now);
+    time_t start = now/k_roll_per_seconds *k_roll_per_seconds;
+    if(now > m_last_roll){
+        m_last_roll = now;
+        m_last_flush = now;
+        m_start_of_period = start;
+        m_file.reset(new FileUtil::AppendFile(file_name));
+        return true;
+    }
+    return false;
+}
+
+std::string czy::LogFile::get_log_filename(const string & basename, time_t* now){
+    string file_name;
+    //reserve函数，只是改变capacity并不会创建对象，也不会改变大小
+    //resize函数，即创建对象，也改变大小，也改变size
+    file_name.reserve(basename.size() + 64);
+    file_name = basename;
+    char time_buf[32];
+    struct tm tm;
+    *now = time(NULL);
+    //gmt用来获取标准时间
+    gmtime_r(now,&tm);
+    //strftime用于格式化时间转换成字符串
+    strftime(time_buf,sizeof(time_buf),".%Y%m%d-%H%M%S",&tm);
+    file_name += time_buf;
+    file_name += czy::ProcessInfo::hostname();
+    char pidbuf[32];
+    snprintf(pidbuf,sizeof(pidbuf),".%d",ProcessInfo::pid());
+    file_name += pidbuf;
+    file_name += ".log";
+    return file_name;
 }
