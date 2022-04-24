@@ -1,6 +1,7 @@
 #include"net/endian.h"
 #include"../base/types.h"
 #include"../base/logging.h"
+#include <arpa/inet.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>  // snprintf
@@ -10,9 +11,9 @@
 namespace czy{
 namespace net{
 namespace sockets{
-int createNoBreakingOrDie(sa_family_t);
+int createNonblockingOrDie(sa_family_t);
 int connect(int sockfd,const struct sockaddr* addr);
-void bindOrdie(int sockfd,const struct sockaddr* addr);
+void bindOrDie(int sockfd,const struct sockaddr* addr);
 void listenOrDie(int sockfd);
 int accept(int sockfd,struct sockaddr_in6 *addr);
 ssize_t read(int sockfd,void *buf,size_t count);

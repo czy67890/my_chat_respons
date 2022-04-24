@@ -6,6 +6,8 @@
 //被c++新标准提倡
 using namespace czy;
 using namespace czy::net;
+namespace czy{
+namespace net{
 const struct sockaddr* sockets::sockaddr_cast(const struct sockaddr_in6* addr)
 {
   return static_cast<const struct sockaddr*>(implicit_cast<const void*>(addr));
@@ -228,7 +230,7 @@ int sockets::getSocketError(int sockfd)
 struct sockaddr_in6 sockets::getLocalAddr(int sockfd)
 {
   struct sockaddr_in6 localaddr;
-  memZero(&localaddr, sizeof localaddr);
+  mem_zero(&localaddr, sizeof localaddr);
   socklen_t addrlen = static_cast<socklen_t>(sizeof localaddr);
   if (::getsockname(sockfd, sockaddr_cast(&localaddr), &addrlen) < 0)
   {
@@ -240,7 +242,7 @@ struct sockaddr_in6 sockets::getLocalAddr(int sockfd)
 struct sockaddr_in6 sockets::getPeerAddr(int sockfd)
 {
   struct sockaddr_in6 peeraddr;
-  memZero(&peeraddr, sizeof peeraddr);
+  mem_zero(&peeraddr, sizeof peeraddr);
   socklen_t addrlen = static_cast<socklen_t>(sizeof peeraddr);
   if (::getpeername(sockfd, sockaddr_cast(&peeraddr), &addrlen) < 0)
   {
@@ -269,4 +271,7 @@ bool sockets::isSelfConnect(int sockfd)
   {
     return false;
   }
+}
+
+}
 }
