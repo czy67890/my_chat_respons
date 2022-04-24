@@ -10,6 +10,8 @@ namespace czy{
 namespace net{
 const struct sockaddr* sockets::sockaddr_cast(const struct sockaddr_in6* addr)
 {
+  //这种static_cast<* >(implicit_cast的写法)
+  //先使用implicit_cast 将其转为void*再使用static_cast转换为想要的类型
   return static_cast<const struct sockaddr*>(implicit_cast<const void*>(addr));
 }
 
@@ -54,7 +56,9 @@ int sockets::createNonblockingOrDie(sa_family_t family)
 }
 
 void sockets::bindOrDie(int sockfd, const struct sockaddr* addr)
-{
+{ 
+  //这里的bind函数全部使用ipv6的格式
+  //由于ipv6的size最大,所以是兼容的
   int ret = ::bind(sockfd, addr, static_cast<socklen_t>(sizeof(struct sockaddr_in6)));
   if (ret < 0)
   {
@@ -232,6 +236,8 @@ struct sockaddr_in6 sockets::getLocalAddr(int sockfd)
   struct sockaddr_in6 localaddr;
   mem_zero(&localaddr, sizeof localaddr);
   socklen_t addrlen = static_cast<socklen_t>(sizeof localaddr);
+  //getsockname用于将已绑定的sockfd的sockaddr返回，
+  //用于获取自身这边的ip以及port
   if (::getsockname(sockfd, sockaddr_cast(&localaddr), &addrlen) < 0)
   {
     LOG_SYSERR << "sockets::getLocalAddr";
@@ -244,6 +250,7 @@ struct sockaddr_in6 sockets::getPeerAddr(int sockfd)
   struct sockaddr_in6 peeraddr;
   mem_zero(&peeraddr, sizeof peeraddr);
   socklen_t addrlen = static_cast<socklen_t>(sizeof peeraddr);
+  //getpeername 用于获取对方的ip以及port
   if (::getpeername(sockfd, sockaddr_cast(&peeraddr), &addrlen) < 0)
   {
     LOG_SYSERR << "sockets::getPeerAddr";
