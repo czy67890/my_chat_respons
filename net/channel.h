@@ -7,6 +7,7 @@ namespace czy{
 namespace net{
 class EventLoop;
 class Channel: nocopyable{
+public:
 typedef std::function<void()> EventCallback;
 typedef std::function<void(TimeStamp)> ReadEventCallback;
 
@@ -40,7 +41,7 @@ void disableReading(){events_ &= ~KReadEvent;update();}
 void enableWriting(){ events_ |= KWriteEvent;update();}
 //通过位运算来设置是否可读
 void disableWriting(){events_ &= ~KWriteEvent;update();}
-
+void disAbleAll(){ events_ = KNoneEvent;update();}
 bool isWriting () const{return KReadEvent & events_;}
 bool isReading() const{return KWriteEvent & events_;}
 int index() const { return index_;}
@@ -51,7 +52,7 @@ void doNotLogUp(){logHup_ = false;}
 EventLoop * ownerLoop() {return loop_;}
 void remove();
 private:
-    static std::string eventToString(int fd,int ev);
+    static std::string eventsToString(int fd,int ev);
     void update();
     void handleEventWithGuard(TimeStamp receiveTime);
     static const int KNoneEvent;

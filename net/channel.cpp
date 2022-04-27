@@ -65,8 +65,60 @@ void Channel::handleEventWithGuard(TimeStamp recvtime){
         }
         if(closeCallback_)closeCallback_();
     }
+
+    //POLLNVAL在文件描述符未打开或者打开的是一个空值的时候发生
     if(revents_ & POLLNVAL){
         LOG_WARN<<"fd = "<<fd_<<" Channel handling events POLLNVAL";
     }
+    if(revents_ &( POLLERR||POLLNVAL)){
+        if(errorCallback_){
+            errorCallback_();
+        }
+    }
+    //POLLPRI提醒有紧急事件读
+    //POLLRDHUP提醒对端已经关闭
+    if(revents_ & (POLLIN|POLLPRI|POLLRDHUP)){
+        if(readCallback_){
+            readCallback_(recvtime);
+        }
+    }
+    if(revents_& POLLOUT){
+        if(writeCallback_)writeCallback_();
+    }
+    eventHandling_ = false;
 }
+std::string Channel::reventsToString() const{
+    return eventsToString(fd_,revents_);
+}
+std::string Channel::eventsToString() const{
+    return eventsToString(fd_,events_);
+}
+std::string Channel::eventsToString(int fd,int ev){
+    std::ostringstream oss;
+    oss<<fd<<":";
+    if(ev&POLLIN){
+        oss<<"IN";
+    }
+    if(ev&EPOLLPRI){
+        oss<<"PRI";
+    }
+    if(ev&&POLLOUT){
+        oss<<"OUT";
+    }
+    if(ev&&POLLHUP){
+        oss<<"HUP";
+    }
+    if(ev&POLLRDHUP){
+        oss<<"RDHUP";
+    }
+    if(ev&POLLERR){
+        oss<<"ERR";
+    }
+    if(ev&POLLNVAL){
+        oss<<"NVAL";
+    }
+    return oss.str();
+}
+
+
 
