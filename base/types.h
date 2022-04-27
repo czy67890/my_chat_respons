@@ -5,6 +5,11 @@
 #ifndef NDEBUG
 #include<assert.h>
 #endif
+//implict_cast<>是一种安全的类型转换，若使用static_cast<>
+//那么会在下转型时任然成功
+//这时候程序功能时未定义的
+//会在运行时crash
+//而dynam_cast则会在造成RTII这是我们应该避免的一种情况
 namespace czy{
 using std::string;
 inline void mem_zero(void * p,size_t n){

@@ -95,6 +95,8 @@ void czy::AsyncLogging::thread_func(){
             buffers_to_writes.resize(2);
         }
         if(!new_buffer_ptr1){
+            //直接从buffer_to_write 中抽取并且move
+            //效率十分高
             assert(!buffers_to_writes.empty());
             new_buffer_ptr1 = std::move(buffers_to_writes.back());
             buffers_to_writes.pop_back();
