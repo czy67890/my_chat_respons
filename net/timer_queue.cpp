@@ -95,5 +95,35 @@ void TimerQueue::addTimerInLoop(Timer * timer){
     }
 }
 
+//升序链表构成的TimerQueue
+//只需要对比开头即可
+bool TimerQueue::insert(Timer * timer){
+    loop_->assertInLoopThread();
+    assert(timer_.size() == activeTimer_.size());
+    bool earliestChanged = false;
+    TimeStamp when = timer->expiration();
+    TimerList::iterator it = timer_.begin();
+    if(it == timer_.end() ||when<it->first){
+        earliestChanged = true;
+    }
+    //通过花括号来手动管理生命周期
+    {
+        std::pair<TimerList::iterator,bool> result = 
+        timer_.insert(Entry(when,timer));
+        assert(result.second);
+        (void) result;
+    }
+    {   
+        //insert返回一个pair
+        //first为一个ietrator指向新建值
+        //second为一个指示是否成功的变量
+        std::pair<ActiveTimerSet::iterator,bool> result = 
+        activeTimer_.insert(ActiveTimer(timer,timer->sequence()));
+        assert(result.second);
+        //这样的写法是为了防止编译器报错
+        //实际上并没有意义
+        (void) result;
+    }
+}
 
 
