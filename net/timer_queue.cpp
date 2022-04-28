@@ -95,6 +95,27 @@ void TimerQueue::addTimerInLoop(Timer * timer){
     }
 }
 
+void TimerQueue::cancel(TimerId timerid){
+    loop_->runInLoop(std::bind(&TimerQueue::cancelInLoop,this,timerid));
+}
+
+void TimerQueue::cancelInLoop(TimerId timerid){
+    loop_->assertInLoopThread();
+    assert(timer_.size() == activeTimer_.size());
+    ActiveTimer timer(timerid.timer_,timerid.sequence_);
+    auto iter = activeTimer_.find(timer);
+    if(iter != activeTimer_.end()){
+        size_t n = timer_.erase(Entry(iter->first->expiration(),iter->first));
+        assert(n == 1);
+        (void) n;
+        delete iter->first;
+        activeTimer_.erase(iter);
+    } 
+    else if(callingExpiredTimers_){
+        cancelingTimer_.insert(timer);
+    }
+    assert(timer_.size() == activeTimer_.size());
+}
 //升序链表构成的TimerQueue
 //只需要对比开头即可
 bool TimerQueue::insert(Timer * timer){

@@ -10,7 +10,7 @@ public:
     TimerId(Timer *timer,int64_t sequence):
      timer_(timer),sequence_(sequence)
     {}
-    friend class TImerQueue;
+    friend class TimerQueue;
 private:
     Timer* timer_;
     int64_t sequence_;

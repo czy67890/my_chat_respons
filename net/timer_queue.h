@@ -28,6 +28,7 @@ private:
     void addTimerInLoop(Timer* timer);
     void cancelInLoop(TimerId timerId);
     void handleRead();
+    void cancal(TimerId timerid);
     std::vector<Entry> getExpired(TimeStamp now);
     void reset(const std::vector<Entry>& expired,TimeStamp now);
     bool insert(Timer* timer);
