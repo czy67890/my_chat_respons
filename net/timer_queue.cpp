@@ -34,7 +34,7 @@ struct timespec howMuchTimeFromNow(TimeStamp when){
     ((micro_second % TimeStamp::k_micro_seconds_persecond) *1000);
     return spec;
 }
-void readTimeFd(int timefd,TimeStamp now){
+void readTimerFd(int timefd,TimeStamp now){
     uint64_t howmany;
     ssize_t n = ::read(timefd,&howmany,sizeof(howmany));
     LOG_TRACE<<"TimerQueue::handleRead() "<<howmany<<"at"<<now.to_string();
@@ -116,6 +116,73 @@ void TimerQueue::cancelInLoop(TimerId timerid){
     }
     assert(timer_.size() == activeTimer_.size());
 }
+
+
+//先将所有超时的先过滤
+//通过getExpired来实现
+//getExpired又是以lower_bound实现的
+void TimerQueue::handleRead(){
+    loop_->assertInLoopThread();
+    TimeStamp now(TimeStamp::now());
+    readTimerFd(timerfd_,now);
+
+    std::vector<Entry> expired = getExpired(now);
+
+    callingExpiredTimers_ = true;
+    cancelingTimer_.clear();
+    for(const Entry & it : expired){
+        it.second->run();
+    }
+    callingExpiredTimers_ = false;
+}
+
+std::vector<TimerQueue::Entry> TimerQueue::getExpired(TimeStamp now){
+    assert(timer_.size() == activeTimer_.size());
+    std::vector<Entry> expired;
+    //UINTPTR_MAX :uintptr的最大值
+    //uintptr:和指针大小完全一样，用于将任何指针转换后再回滚
+    Entry sentry(now,reinterpret_cast<Timer *> (UINTPTR_MAX));
+    TimerList::iterator end = timer_.lower_bound(sentry);
+    assert(end == timer_.end() || now <= end->first);
+    //std::cpoy()使用的底层是memmove
+    //memmove类似于memcpy
+    //memcpy有一个缺点，就是在地址发生重叠的时候会发生错误
+    //而memmove则没有这方面的问题
+    std::copy(timer_.begin(),end,back_inserter(expired));
+    timer_.erase(timer_.begin(),end);
+
+    for(const Entry & it:expired){
+        ActiveTimer timer(it.second,it.second->sequence());
+        size_t n = activeTimer_.erase(timer);
+        assert(n == 1);
+        (void) n;
+    }
+    assert(timer_.size() == activeTimer_.size());
+    return expired;
+}
+
+void TimerQueue::reset(const std::vector<Entry> & expired,TimeStamp now){
+    TimeStamp nextExpired;
+    for(const Entry & it : expired){
+        ActiveTimer timer(it.second,it.second->sequence());
+        //当是一个间隔定时任务，而且不属于取消的定时器时，重启
+        //否则，删除该timer
+        if(it.second->repeat() && cancelingTimer_.find(timer) == cancelingTimer_.end()){
+            it.second->restart(now);
+            insert(it.second);
+        }
+        else{
+            delete it.second;
+        }
+    }
+    if(!timer_.empty()){
+        nextExpired = timer_.begin()->second->expiration();
+    }
+    if(nextExpired.valid()){
+        resetTimerfd(timerfd_,nextExpired);
+    }
+}
+
 //升序链表构成的TimerQueue
 //只需要对比开头即可
 bool TimerQueue::insert(Timer * timer){
@@ -130,7 +197,7 @@ bool TimerQueue::insert(Timer * timer){
     //通过花括号来手动管理生命周期
     {
         std::pair<TimerList::iterator,bool> result = 
-        timer_.insert(Entry(when,timer));
+        timer_.insert(std::move(Entry(when,timer)));
         assert(result.second);
         (void) result;
     }
@@ -139,7 +206,7 @@ bool TimerQueue::insert(Timer * timer){
         //first为一个ietrator指向新建值
         //second为一个指示是否成功的变量
         std::pair<ActiveTimerSet::iterator,bool> result = 
-        activeTimer_.insert(ActiveTimer(timer,timer->sequence()));
+        activeTimer_.insert(std::move(ActiveTimer(timer,timer->sequence())));
         assert(result.second);
         //这样的写法是为了防止编译器报错
         //实际上并没有意义

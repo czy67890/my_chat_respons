@@ -21,6 +21,7 @@ public:
     TimerId addTimer(TimerCallback cb,TimeStamp when,double interval);
     void cancel(TimerId timerId);
 private:
+    //用set可以自动维护一个升序的计时器
     typedef std::pair<TimeStamp,Timer*> Entry;
     typedef std::set<Entry> TimerList;
     typedef std::pair<Timer *,int64_t> ActiveTimer;
