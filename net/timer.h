@@ -3,6 +3,10 @@
 #include"../base/Timestamp.h"
 #include"callbacks.h"
 //定时器类
+
+//拥有回调函数
+
+//超时时间
 namespace czy{
 
 namespace net{

@@ -99,6 +99,8 @@ void TimerQueue::cancel(TimerId timerid){
     loop_->runInLoop(std::bind(&TimerQueue::cancelInLoop,this,timerid));
 }
 
+//cancel最终调用的函数
+//将timer从activeTimerList和timer_中删除
 void TimerQueue::cancelInLoop(TimerId timerid){
     loop_->assertInLoopThread();
     assert(timer_.size() == activeTimer_.size());

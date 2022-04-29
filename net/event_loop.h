@@ -32,7 +32,7 @@ public:
     TimerId runAt(TimeStamp time,TimerCallback cb);
     TimerId runAfter(double delay,TimerCallback cb);
     TimerId runEvery(double interval,TimerCallback cb);
-    void cancle(TimerId timerid);
+    void cancel(TimerId timerid);
     void wakeup();
     void updateChannel(Channel *channel);
     void removeChannel(Channel *channel);
@@ -64,12 +64,13 @@ public:
 private:
     void abortNotInLoopThread();
     void handleRead();
-    void dePendingFunctors();
+    void doPendingFunctors();
     void printActiveChannels() const;
     typedef std::vector<Channel *>ChannelList;
     bool looping_;
-    std::atomic<bool> quit;
+    std::atomic<bool> quit_;
     bool eventHandling_;
+    bool callingPendingFunctors_;
     int64_t iteration_;
     const pid_t threadId_;
     TimeStamp pollReturnTime_;
