@@ -79,4 +79,24 @@ void Socket::set_reuseable_addr(bool on){
                &optval, static_cast<socklen_t>(sizeof optval));
 }
 
-void Socket::set_reuseadble_port()
+void Socket::set_reuseadble_port(bool on){
+#ifdef SO_REUSEPORT
+    int optval = on ? 1: 0;
+    int ret= ::setsockopt(m_sockfd,SOL_SOCKET,SO_REUSEPORT,
+    &optval,static_cast<int> (sizeof(optval)));
+
+    if(ret < 0&& on){
+        LOG_SYSERR<<"SO_REUSEPORT failed.";
+    }
+#else
+    if(on){
+        LOG_ERR<<"SO_REUSEPORT is not supported."
+    }
+#endif
+}
+
+void Socket::set_keep_alive(bool on){
+    int optval = on ? 1: 0;
+    ::setsockopt(m_sockfd,SOL_SOCKET,SO_KEEPALIVE,
+    &optval,static_cast<socklen_t>(sizeof(optval)));
+}

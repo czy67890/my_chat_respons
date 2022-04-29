@@ -19,7 +19,7 @@ public:
     void set_tcp_nodelay(bool on);
     void set_reuseable_addr(bool on);
     void set_reuseadble_port(bool on);
-    void set_keep_alive();
+    void set_keep_alive(bool on);
 private:
     int m_sockfd;
 };
