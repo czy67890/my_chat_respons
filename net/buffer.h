@@ -23,7 +23,9 @@ public:
      :buffer_(kCheapPrepend+initsize),readIndex_(kCheapPrepend),
      writeIndex_(kCheapPrepend)
     {
-        assert();
+        assert(readableBytes() == 0);
+        assert(writeableBytes() == initsize);
+        assert(prependableBytes() == kCheapPrepend);
     }
     void swap(Buffer & rhs){
         //使用特化的swap函数，可以提高性能
@@ -118,7 +120,7 @@ public:
         return result;
     }
 
-    
+
 private:
     //先取begin再换成值
     //最后取地址
