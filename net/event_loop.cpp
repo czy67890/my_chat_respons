@@ -59,7 +59,7 @@ EventLoop::EventLoop()
   timerQueue_(new TimerQueue(this)),wakeupFd_(createEventfd()),
   wakeupChannel_(new Channel(this,wakeupFd_)),currentActiveChannel_(NULL)
 {   
-    //这里的this会被转换成一个空指针，然后输出
+    //这里的this会被转换成一个指针，然后输出地址值
 
     //LOG_DEBUG这些实质上都是LOG_STREAM类
     LOG_DEBUG<<"EventLoop created"<<this<<"in thread"<<threadId_;
@@ -127,6 +127,10 @@ void EventLoop::quit(){
 //直接调用回调函数
 //若不是则需要插入到队列中
 //等待调用
+//channel中只需要调用
+//bind即可
+//将回调函数bind到该runInLoop中即可
+
 void EventLoop::runInLoop(Functor cb){
     if(isInLoopThread){
         cb();
