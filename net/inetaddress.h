@@ -8,7 +8,7 @@ namespace sockets{
 const struct sockaddr * sockaddr_cast(const struct sockaddr_in6 *addr);
 }//namespace sockets
 
-class InetAddress :  public nocopyable{
+class InetAddress{
 public:
 explicit InetAddress(uint16_t port = 0,bool loop_back_only = false,bool ipv6 = false);
 InetAddress(StringArg ip,uint16_t port,bool ipv6 = false);

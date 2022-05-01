@@ -127,6 +127,8 @@ public:
     void retriveInt8(){
         retrive(sizeof(int8_t));
     }
+
+    //½«Buffer¸´Î»¼´¿É
     void retriveAll(){
         readIndex_ = writeIndex_ = kCheapPrepend;
     }
