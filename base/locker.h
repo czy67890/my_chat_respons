@@ -2,6 +2,7 @@
 #include "platform.h"
 #include "raii_wrape.h"
 #include"current_thread.h"
+#include"nocopyable.h"
 namespace czy{
 class Mutex{
 public:
@@ -53,6 +54,7 @@ private:
 //封装好RAII防止忘记解锁
 class MutexGroud {
 public:
+    //????????????????
     MutexGroud(Mutex &mutex):mutex_(mutex){
         mutex.lock();
     }
@@ -63,6 +65,9 @@ public:
         return mutex_;
     }
 private:
+    //????????Mutex???
+    //???????????
+    //????????
     Mutex& mutex_;
 };
 class Cond{
