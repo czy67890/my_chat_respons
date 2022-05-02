@@ -68,6 +68,10 @@ private:
     bool eventHandling_;
     bool addToLoop_;
     //std::weak_ptr用于与shared_ptr协作管理
+    //这里的weak_ptr用于辅助管理类似与Tcpconnection这样的对象
+    //本身并不会使得Tcpconnection的引用计数增加或者减少
+    //用weak_ptr而不是shared_ptr原因在于
+    //但凡是交叉引用的情况就需要weak_ptr+lock的帮助
     std::weak_ptr<void> tie_;
     ReadEventCallback readCallback_;
     EventCallback writeCallback_;

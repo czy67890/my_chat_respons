@@ -46,6 +46,8 @@ void Channel::remove(){
 void Channel::handleEvent(TimeStamp recvtime){
     std::shared_ptr<void> guard;
     if(tied_){
+        //handleevent时提升自己的tie weak_ptr
+        //延长对象的生命周期，使得不被析构而造成coredump
         guard = tie_.lock();    
         if(guard){
             handleEventWithGuard(recvtime);

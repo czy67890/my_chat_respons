@@ -150,6 +150,7 @@ void EventLoop::queueInLoop(Functor cb){
         pendingFunctors_.push_back(std::move(cb));
     }
     if(!isInLoopThread() || callingPendingFunctors_){
+        //wakeup直接send用来获取io线程的控制权
         wakeup();
     }
 }
@@ -250,3 +251,4 @@ void EventLoop::printActiveChannels() const{
         LOG_TRACE<<"{"<<channel->reventsToString()<<"}";
     }
 }
+

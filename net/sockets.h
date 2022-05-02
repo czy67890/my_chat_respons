@@ -15,7 +15,7 @@ public:
     void bind_addr(const InetAddress &local_addr);
     void listen();
     int accept(InetAddress *peeraddr);
-    void shotdown_write();
+    void shutdown_write();
     void set_tcp_nodelay(bool on);
     void set_reuseable_addr(bool on);
     void set_reuseadble_port(bool on);

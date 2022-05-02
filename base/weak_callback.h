@@ -10,7 +10,7 @@ public:
      :object_(object),function_(func)
     {}
     //&&创造万能引用
-    void operator()(ARGS&& .. args) const{
+    void operator()(ARGS&&... args) const{
         std::shared_ptr<CLASS> ptr(object_.lock());
         if(ptr){
             function_(ptr.get(),std::forward<ARGS>(args)...);
@@ -24,7 +24,7 @@ private:
 
 template<typename CLASS,typename... ARGS>
 WeakCallback<CLASS,ARGS...> makeWeakCallback(const std::shared_ptr<CLASS> &object,void(CLASS::*function)(ARGS...)){
-    return WeakCallcack(object,function);
+    return WeakCallback<CLASS,ARG... >(object,function);
 }
 
 template<typename CLASS, typename... ARGS>

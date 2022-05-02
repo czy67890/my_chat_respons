@@ -61,7 +61,7 @@ int Socket::accept(InetAddress *peeraddr){
     return connfd;
 }
 
-void Socket::shotdown_write(){
+void Socket::shutdown_write(){
     sockets::shutdownWrite(m_sockfd);
 }
 //设置TCP的无延迟选项

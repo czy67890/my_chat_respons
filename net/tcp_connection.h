@@ -34,7 +34,7 @@ const InetAddress & peerAddress() {return peerAddress_;}
 bool connected () const{ return state_ == KConnected;}
 bool disconnected() const {return state_ == KDisconnected;}
 bool getTcpInfo(tcp_info *) const;
-string getTcpInfoString() const;
+string getTcpInfoString(tcp_info *) const;
 
 void send(const void *message,int len);
 void send(const StringPiece & message);
@@ -98,8 +98,8 @@ private:
     void handleError();
     void sendInLoop(const StringPiece & message);
     void sendInLoop(const void* message,size_t len);
-    void shotdownInLoop();
-    void forcecloseInLoop();
+    void shutdownInLoop();
+    void forceCloseInLoop();
     void setState(StateE state){ state_ = state; }
     const char *stateTostring() const;
     void startReadInLoop();
