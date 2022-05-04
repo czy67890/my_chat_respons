@@ -34,6 +34,8 @@ public:
 //可以被派生类访问
 //private不能被派生类访问
 protected:
+
+    //poller拥有fd到Channel*的映射
     typedef std::map<int,Channel *> ChannelMap;
     ChannelMap channels_;
 private:

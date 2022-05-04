@@ -7,6 +7,7 @@
 #include"socketops.h"
 #include"eventloop_threadpool.h"
 #include<stdio.h>
+#include<memory>
 
 using namespace czy;
 using namespace czy::net;
@@ -60,12 +61,17 @@ void TcpServer::newConnection(int sockfd,const InetAddress & addr){
     LOG_INFO<<"TcpSerever::new Connection["<<name_<<
     "] - new connection["<<conname<<"]from "<<addr.toIpPort();
     InetAddress localAddr(sockets::getLocalAddr(sockfd));
-    TcpConnectionPtr conn(new TcpConnection(ioloop,conname,sockfd,localAddr,addr));
+    //efectivec++中的推荐用法
+    //而不是让conn指向new
+    //这样是异常安全的
+    TcpConnectionPtr conn(std::make_shared<TcpConnection>(ioloop,conname,sockfd,localAddr,addr));
     connections_[conname] = conn;
     conn->setConnectionCallback(connectionCallback_);
     conn->setMessageCallback(messageCallback_);
     conn->setWriteCompleteCallback(writeCompleteCallback_);
-    //TcpConnection最终会在这里被关闭
+    //注册到TcpConnection中
+    //在TcpConnection关闭时
+    //从自己的map中删除相关信息
     conn->setCloseCallback(std::bind(&TcpServer::removeConnection,this,_1));
     ioloop->runInLoop(std::bind(&TcpConnection::connectEstablished,conn));
 }
@@ -74,6 +80,8 @@ void TcpServer::removeConnection(const TcpConnectionPtr & conn){
     loop_->runInLoop(std::bind(&TcpServer::removeConnectionInLoop,this,conn));
 }
 
+//删除自己map中的相关connection
+//并且调用Tcpconnection中的destory销毁链接
 void TcpServer::removeConnectionInLoop(const TcpConnectionPtr & conn){
     loop_->assertInLoopThread();
     LOG_INFO<<"TcpServer::removeConnectionInLoop ["<<name_<<

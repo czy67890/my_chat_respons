@@ -41,6 +41,12 @@ void Acceptor::listen(){
     acceptChannel_.enableReading();
 }
 
+//Acceptor的职责，监听新的到来链接
+//在调用accept接受这个新连接
+//确保中间没有发生问题后
+//调用newConnectionCallback_
+//这里被TcpServer设置为其中调用其中的方法newConnection
+//并加入TcpServer的map中
 void Acceptor::handleRead(){
     loop_->assertInLoopThread();
     InetAddress peerAddr;
