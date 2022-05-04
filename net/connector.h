@@ -20,7 +20,7 @@ public:
     Connector(EventLoop * loop,const InetAddress & serverAddr);
     ~Connector();
 
-    void setNewConnectionCallback(NewConnectionCallback& cb){
+    void setNewConnectionCallback(const NewConnectionCallback& cb){
         newConnectionCallback_ = cb;
     }
 

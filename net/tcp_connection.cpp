@@ -308,6 +308,8 @@ void TcpConnection::handleClose(){
   channel_->disAbleAll();
   TcpConnectionPtr graud(shared_from_this());
   connectionCallback_(graud);
+  //处理close的时候调用closecallback
+  //一种是绑定为loop_->(queueInloop)Tcp::connection::connectionDestory
   closeCallback_(graud);
 }
 
