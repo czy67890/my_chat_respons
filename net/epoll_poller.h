@@ -15,6 +15,10 @@ public:
     //override指示该函数必须被覆写
     //用来保证不发生一些错误
     ~EPollPoller() override;
+
+    TimeStamp poll(int timeoutMs,ChannelList *activeChannels) override;
+    void updateChannel(Channel * channel) override;
+    void removeChannel(Channel* channel) override;
 private:
     static const int KInitEventSize;
     static const char * operationTostring(int op);
