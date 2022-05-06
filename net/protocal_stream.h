@@ -23,7 +23,32 @@ namespace net{
 
         CHECKSUM_LEN = 2,
     };
-
+    //计算校验和
     unsigned int checkSum(const unsigned short* buf,int size);
+    //
+    void write7BitEncoded(uint32_t value,std::string &buf);
 
+    void write7BitEncoded(uint64_t value,std::string &buf);
+
+    void read7BitEncoded(const char * buf,uint32_t len,uint32_t &value);
+
+    void read7BitEncoded(const char * buf,uint32_t len,uint64_t &value);
+
+
+    //final 用于类代表当前类不能作为基类被重写
+    class BinaryStreamReader final{
+    public:
+        BinaryStreamReader(const char * ptr,int len);
+        ~BinaryStreamReader() = default;
+
+        virtual const char * GetData() const;
+        virtual size_t GetSize() const;
+        bool isEmpty() const;
+        bool readString(std::string * str,size_t maxlen,size_t& outlen);
+        bool readCString(char * str,size_t strlen,size_t &len);
+        bool readCCstring(const char ** str,size_t maxlen,size_t&outlen);
+        bool readInt32(int32_t& i);
+        bool readInt64(int64_t& i);
+        
+    };
 }

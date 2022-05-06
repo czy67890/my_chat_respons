@@ -62,6 +62,10 @@ private:
     //存放name对应的TcpConnection
     using ConnectionMap = std::map<string,TcpConnectionPtr>;
 
+
+    //整个服务器的根loop
+    //主reactor所在的loop
+    
     EventLoop *loop_;
     const string ipPort_;
     const string name_;

@@ -41,6 +41,9 @@ void EventLoopThread::threadFunc(){
         loop_  = &loop;
         cond_.post();
     }
+
+    //每次新建的一个链接
+    //直接调用其loop就可以了
     loop.loop();
     MutexGroud lock(mutex_);
     loop_ = NULL;

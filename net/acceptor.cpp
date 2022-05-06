@@ -14,6 +14,7 @@ using namespace czy::net;
 Acceptor::Acceptor(EventLoop *loop,const InetAddress &listenAddr,bool reuseport)
  :loop_(loop),
     acceptSocket_(sockets::createNonblockingOrDie(listenAddr.family())),
+    //在这里给tcpserver的accept做好channel分发
     acceptChannel_(loop, acceptSocket_.fd()),
     listening_(false),
     //O_CLOEXEC:

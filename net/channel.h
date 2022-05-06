@@ -35,6 +35,10 @@ int fd() const {return fd_;}
 int events() const{return events_;}
 void setRevents(int revt) {revents_ = revt;} 
 bool isNoneEvent() const {return revents_ == KNoneEvent;}
+//这个update是必不可少的
+//在这个update之后
+//注册到了(int,channel*)map中
+//这个时候再监听就可以了
 void enableReading(){ events_ |= KReadEvent;update();}
 //通过位运算来设置是否可读
 void disableReading(){events_ &= ~KReadEvent;update();}

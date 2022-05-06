@@ -45,6 +45,9 @@ void TcpServer::setThreadNum(int numThread){
 
 void TcpServer::start(){
     if(started_.get_and_set(1) == 0){
+        //threadpool创建线程之后
+        //会因为自己的loop而阻塞
+        
         threadPool_->start(threadInitCallback_);
         assert(!acceptor_->listening());
         loop_->runInLoop(std::bind(&Acceptor::listen,get_pointer(acceptor_)));

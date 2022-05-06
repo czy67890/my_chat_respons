@@ -290,11 +290,16 @@ void appendInt64(int64_t x)
   {
     prepend(&x, sizeof x);
   }
-
+  
+  //effctivestl 中推荐的收缩容量算法
+  //swap and shrink
   void shirnk(size_t reserve){
+      //创建新buffer
       Buffer other;
+      //调整到合适大小
       other.ensureWriteableBytes(readableBytes() + reserve);
       other.append(toStringPiece());
+      //交换并且析构以前不合适的版本
       swap(other);
   }
 
@@ -334,6 +339,10 @@ private:
         }
     }
 private:
+    //使用vector<char>而不是string
+    //好处，动态扩容的可能性
+    //而且相比string，vector的兼容性更加好
+    //vector承诺与数组有同样的内存分布
     std::vector<char> buffer_;
     size_t readIndex_;
     size_t writeIndex_;

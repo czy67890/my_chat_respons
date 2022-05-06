@@ -187,6 +187,9 @@ void EventLoop::updateChannel(Channel * channel){
     assert(channel->ownerLoop() == this);
     assertInLoopThread();
     //将updateChannel 交给poller去处理
+    //每个channel并不拥有fd
+    //只是管理这个fd
+    //调用updateChannel变更其处理方式
     poller_->updateChannel(channel);
 }
 
