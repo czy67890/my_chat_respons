@@ -2,9 +2,6 @@
 #include <stdint.h>
 #include <string.h>  // memset
 #include <string>
-#ifndef NDEBUG
-#include<assert.h>
-#endif
 //implict_cast<>是一种安全的类型转换，若使用static_cast<>
 //那么会在下转型时任然成功
 //这时候程序功能时未定义的

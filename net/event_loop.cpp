@@ -132,7 +132,7 @@ void EventLoop::quit(){
 //将回调函数bind到该runInLoop中即可
 
 void EventLoop::runInLoop(Functor cb){
-    if(isInLoopThread){
+    if(isInLoopThread()){
         cb();
     }
     else{

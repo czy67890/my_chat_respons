@@ -9,7 +9,7 @@ template<typename T>
 class BlockingQueue: nocopyable{
 public:
     using queue_type = std::deque<T>;
-    BlockingQueue():m_mutex(),m_not_empty(),m_queue(){};
+    BlockingQueue():m_mutex(),m_not_empty(m_mutex),m_queue(){};
     void put(const T &x){
         MutexGroud g(m_mutex);
         m_queue.push_back(x);
@@ -24,7 +24,7 @@ public:
     T take(){
         MutexGroud(m_mutex);
         while(m_queue.empty()){
-            m_not_empty.wait(&m_mutex);
+            m_not_empty.wait();
         }
         assert(!m_queue.empty());
         T front(std::move(m_queue.front()));

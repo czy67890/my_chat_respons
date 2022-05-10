@@ -9,14 +9,14 @@ class BoundedBlockingQueue: nocopyable{
 public:
     explicit BoundedBlockingQueue(int max_size):
     m_mutex(),
-    m_not_empty();
-    m_not_full();
+    m_not_empty(m_mutex),
+    m_not_full(),
     m_queue(max_size)
     {}
     void put(const T&x){
         MutexGroud lock(m_mutex);
         while(m_queue.full()){
-            m_not_empty.wait(&m_mutex);
+            m_not_empty.wait();
         }
         assert(!m_queue.full());
         m_queue.push_back(x);
@@ -25,7 +25,7 @@ public:
     void put(T &&x){
         MutexGroud lock(m_mutex);
         while(m_queue.full()){
-            m_not_empty.wait(&m_mutex);
+            m_not_empty.wait();
         }
         assert(!m_queue.full());
         m_queue.push_back(std::move(x));
@@ -34,7 +34,7 @@ public:
     T take(){
         MutexGroud lock(m_mutex);
         while(m_queue.empty()){
-            m_not_empty.wait(m_mutex);
+            m_not_empty.wait();
         }
         assert(!m_queue.empty());
         T front(std::move(m_queue.front()));

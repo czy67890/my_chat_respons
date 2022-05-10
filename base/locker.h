@@ -1,5 +1,6 @@
 #pragma once
-#include "platform.h"
+#include <assert.h>
+#include <pthread.h>
 #include "raii_wrape.h"
 #include"current_thread.h"
 #include"nocopyable.h"

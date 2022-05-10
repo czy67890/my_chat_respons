@@ -54,7 +54,7 @@ private:
     void( * m_cookie)();
     const char * end() const {return m_data + sizeof(m_data);}
     char m_data[SIZE];
-    char *m_cur
+    char *m_cur;
 };
 }//namespace detail
 class LogStream: nocopyable{

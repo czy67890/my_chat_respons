@@ -1,5 +1,4 @@
 #pragma once
-#include"platform.h"
 #include<functional>
 #include"count_down_latch.h"
 #include"nocopyable.h"

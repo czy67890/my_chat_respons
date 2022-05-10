@@ -1,7 +1,14 @@
 #include"m_thread.h"
-#include<type_traits>
 #include"current_thread.h"
+#include"logging.h"
+#include <type_traits>
+#include <errno.h>
+#include <stdio.h>
+#include <unistd.h>
 #include <sys/prctl.h>
+#include <sys/syscall.h>
+#include <sys/types.h>
+#include <linux/unistd.h>
 namespace czy{
 
 namespace detail{

@@ -1,3 +1,4 @@
+#pragma once
 #include<string>
 #include<iosfwd>
 #include"types.h"
@@ -71,7 +72,7 @@ STRINGPIECE_BINARY_PREDICATE(>,  >);
 int compare(const StringPiece &x) const{
     int r = memcmp(m_ptr,x.m_ptr,m_length<x.m_length ?m_length : x.m_length);
         if(r == 0){
-            if(m_length < x.m_length) r == -1;
+            if(m_length < x.m_length) r = -1;
             else if(m_length > x.m_length) r = +1;
         }
         return r;

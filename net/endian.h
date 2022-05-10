@@ -1,6 +1,13 @@
 #pragma once 
+extern "C"{
+  #include "/usr/include/endian.h"
+}
+
 #include<stdint.h>
-#include<endian.h>
+class abc{
+public:
+  abc();
+};
 //因为网络字节序列时大端模式
 //而主机字节序列时小端模式
 //这个头文件用于转换
@@ -40,7 +47,7 @@ inline uint16_t networkToHost16(uint16_t net16)
 {
   return be16toh(net16);
 }
-}
-}
-}
 #pragma GCC diagnostic pop
+}
+}
+}

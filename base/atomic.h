@@ -9,7 +9,7 @@ namespace detail{
 template<typename T>
 class AtomicIntegerT :nocopyable{
 public:
-    AtomicIntegerT():value_(0);
+    AtomicIntegerT():value_(0){};
     T get(){
         return __sync_val_compare_and_swap(&value_,0,0);
     }

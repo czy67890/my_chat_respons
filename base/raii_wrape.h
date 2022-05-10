@@ -4,7 +4,7 @@
 //模板编程
 template<typename T>
 class RAIIWrapper{
-pulbic:
+public:
     RAIIWrapper(T * ptr):ptr_(ptr){
     }
     //将析构函数设置为virtual 强制继承的类来实现

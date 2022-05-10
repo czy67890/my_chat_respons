@@ -1,4 +1,4 @@
-#include"net/endian.h"
+#include"endian.h"
 #include"../base/types.h"
 #include"../base/logging.h"
 #include <arpa/inet.h>
@@ -28,7 +28,7 @@ void fromIpPort(const char *ip,uint16_t port,struct sockaddr_in6 * addr);
 int getSocketError(int sockfd);
 const struct sockaddr* sockaddr_cast(const struct sockaddr_in * addr);
 const struct sockaddr* sockaddr_cast(const struct sockaddr_in6 *addr);
-struct sockaddr* sockaddr_cast(struct socakddr_in6 * addr);
+struct sockaddr* sockaddr_cast(struct sockaddr_in6* addr);
 const struct sockaddr_in* sockaddr_in_cast(const struct sockaddr* addr);
 const struct sockaddr_in6* sockaddr_in6_cast(const struct sockaddr* addr);
 struct sockaddr_in6 getLocalAddr(int sockfd);

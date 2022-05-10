@@ -6,9 +6,9 @@
 #include<time.h>
 czy::LogFile::LogFile(const string& basename,
           off_t rollSize,
-          bool threadSafe = true,
-          int flushInterval = 3,
-          int checkEveryN = 1024)
+          bool threadSafe ,
+          int flushInterval ,
+          int checkEveryN )
 :m_basename(basename),m_roll_size(rollSize),
 m_flush_interval(flushInterval),m_check_every_n(checkEveryN),
 //这里的m_mutex在不需要线程安全的情况下可以直接置NULL,提高线程访问速度

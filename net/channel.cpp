@@ -101,7 +101,7 @@ std::string Channel::eventsToString(int fd,int ev){
     if(ev&POLLIN){
         oss<<"IN";
     }
-    if(ev&EPOLLPRI){
+    if(ev&POLLPRI){
         oss<<"PRI";
     }
     if(ev&&POLLOUT){

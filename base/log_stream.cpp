@@ -177,7 +177,7 @@ void LogStream::static_check()
 template<typename T>
 void LogStream::format_integer(T v){
   if(m_buffer.avail() >= k_max_num_size){
-    size_t len = convert(m_buffer.current());
+    size_t len = convert(m_buffer.current(),v);
     m_buffer.add(len);
   } 
 }
@@ -240,7 +240,7 @@ Fmt::Fmt(const char * fmt,T val){
   //判断该值是否为类型值(即非类与非struct对象)
   static_assert(std::is_arithmetic<T>::value == true,
   "Must be arithmetic type");
-  m_length = snprintf(m_buf,sizeof(m_buf),m_fmt,val);
+  m_length = snprintf(m_buf,sizeof(m_buf),fmt,val);
   assert(static_cast<size_t>(m_length) < sizeof(m_buf));
 }
 //模板显示实列化，方便后续用非模板的方法直接调用Fmt类
